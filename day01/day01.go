@@ -1,5 +1,6 @@
-// Package day01 implements Day 1 of Advent of Code, 2021: [Sonar Sweep].
-// [Sonar Sweep]: https://adventofcode.com/2021/day/1
+// Package day01 implements Day 1 of Advent of Code, 2023: [Trebuchet?!].
+//
+// [Trebuchet?!]: https://adventofcode.com/2023/day/1
 package day01
 
 import (
