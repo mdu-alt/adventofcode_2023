@@ -21,21 +21,17 @@ func part1(filename string) int {
 	var (
 		scanner = bufio.NewScanner(file)
 
-		first, last int
-		sum         int
+		line string
+		l, r int
+		sum  int
 	)
 
 	for scanner.Scan() {
-		first, last = 0, 0
-		for _, r := range scanner.Text() {
-			if unicode.IsDigit(r) {
-				if first == 0 {
-					first = int(r - '0')
-				}
-				last = int(r - '0')
-			}
-		}
-		sum += first*10 + last
+		line = scanner.Text()
+		l = strings.IndexFunc(line, unicode.IsDigit)
+		r = strings.LastIndexFunc(line, unicode.IsDigit)
+
+		sum += int(line[l]-'0')*10 + int(line[r]-'0')
 	}
 
 	return sum
@@ -50,30 +46,34 @@ func part2(filename string) int {
 
 	var (
 		scanner = bufio.NewScanner(file)
-		digits  = []string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
-		acc     = make([]int, 0)
+		digits  = map[string]string{
+			"one":   "o1e",
+			"two":   "t2o",
+			"three": "t3e",
+			"four":  "f4r",
+			"five":  "f5e",
+			"six":   "s6x",
+			"seven": "s7n",
+			"eight": "e8t",
+			"nine":  "n9e",
+		}
 
 		line string
+		l, r int
 		sum  int
 	)
 
 	for scanner.Scan() {
 		line = scanner.Text()
 
-		for i, r := range line {
-			if unicode.IsDigit(r) {
-				acc = append(acc, int(r-'0'))
-			} else {
-				for j, digit := range digits {
-					if strings.HasPrefix(line[i:], digit) {
-						acc = append(acc, j+1)
-					}
-				}
-			}
+		for k, v := range digits {
+			line = strings.ReplaceAll(line, k, v)
 		}
 
-		sum += acc[0]*10 + acc[len(acc)-1]
-		clear(acc)
+		l = strings.IndexFunc(line, unicode.IsDigit)
+		r = strings.LastIndexFunc(line, unicode.IsDigit)
+
+		sum += int(line[l]-'0')*10 + int(line[r]-'0')
 	}
 
 	return sum
