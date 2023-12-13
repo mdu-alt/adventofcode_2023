@@ -1,6 +1,3 @@
-// Package day01 implements Day 1 of Advent of Code, 2023: [Trebuchet?!].
-//
-// [Trebuchet?!]: https://adventofcode.com/2023/day/1
 package day01
 
 import (
@@ -10,32 +7,6 @@ import (
 	"strings"
 	"unicode"
 )
-
-func part1(filename string) int {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer file.Close()
-
-	var (
-		scanner = bufio.NewScanner(file)
-
-		line string
-		l, r int
-		sum  int
-	)
-
-	for scanner.Scan() {
-		line = scanner.Text()
-		l = strings.IndexFunc(line, unicode.IsDigit)
-		r = strings.LastIndexFunc(line, unicode.IsDigit)
-
-		sum += int(line[l]-'0')*10 + int(line[r]-'0')
-	}
-
-	return sum
-}
 
 func part2(filename string) int {
 	file, err := os.Open(filename)
@@ -58,9 +29,8 @@ func part2(filename string) int {
 			"nine":  "n9e",
 		}
 
-		line string
-		l, r int
-		sum  int
+		line      string
+		l, r, sum int
 	)
 
 	for scanner.Scan() {
