@@ -19,34 +19,27 @@ func part1(filename string) int {
 	defer file.Close()
 
 	var (
-		scanner    = bufio.NewScanner(file)
-		isPossible = true
+		scanner = bufio.NewScanner(file)
 
-		tokens      []string
-		i, n        int
-		gameId, sum int
+		tokens, draws  []string
+		color          string
+		n, gameId, sum int
 	)
 
 	for scanner.Scan() {
-		tokens = strings.Fields(scanner.Text())
+		tokens = strings.FieldsFunc(scanner.Text(), isNotAlphanumeric)
 
-		gameId, _ = strconv.Atoi(strings.Split(tokens[1], ":")[0])
+		gameId, _ = strconv.Atoi(tokens[1])
+		draws = tokens[2:]
+		for i := 0; i < len(draws); i = i + 2 {
+			n, _ = strconv.Atoi(draws[i])
+			color = draws[i+1]
 
-		for _, token := range tokens[2:] {
-			if i, err = strconv.Atoi(token); err != nil {
-				if (strings.HasPrefix(token, "red") && n > 12) || (strings.HasPrefix(token, "green") && n > 13) || n > 14 {
-					isPossible = false
-					break
-				}
-			} else {
-				n = i
+			if (color == "red" && n > 12) || (color == "green" && n > 13) || n > 14 {
+				gameId = 0
 			}
 		}
-
-		if isPossible {
-			sum += gameId
-		}
-		isPossible = true
+		sum += gameId
 	}
 
 	return sum
@@ -62,32 +55,35 @@ func part2(filename string) int {
 	var (
 		scanner = bufio.NewScanner(file)
 
-		tokens                []string
-		i, n                  int
-		maxR, maxG, maxB, sum int
+		tokens, draws            []string
+		color                    string
+		n, maxR, maxG, maxB, sum int
 	)
 
 	for scanner.Scan() {
-		tokens = strings.Fields(scanner.Text())
+		tokens = strings.FieldsFunc(scanner.Text(), isNotAlphanumeric)
 
-		for _, token := range tokens[2:] {
-			if i, err = strconv.Atoi(token); err != nil {
-				switch {
-				case strings.HasPrefix(token, "red"):
-					maxR = max(maxR, n)
-				case strings.HasPrefix(token, "green"):
-					maxG = max(maxG, n)
-				default:
-					maxB = max(maxB, n)
-				}
-			} else {
-				n = i
+		draws = tokens[2:]
+		for i := 0; i < len(draws); i = i + 2 {
+			n, _ = strconv.Atoi(draws[i])
+			color = draws[i+1]
+
+			switch color {
+			case "red":
+				maxR = max(maxR, n)
+			case "green":
+				maxG = max(maxG, n)
+			default:
+				maxB = max(maxB, n)
 			}
 		}
-
 		sum += maxR * maxG * maxB
 		maxR, maxG, maxB = 0, 0, 0
 	}
 
 	return sum
+}
+
+func isNotAlphanumeric(r rune) bool {
+	return !('0' <= r && r <= '9') && !('A' <= r && r <= 'Z') && !('a' <= r && r <= 'z')
 }
